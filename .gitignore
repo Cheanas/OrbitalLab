@@ -218,3 +218,25 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ==========================================
+# OrbitalLab project-specific configuration
+# ==========================================
+
+# Environment variables and local secrets
+.env
+.env.*
+!.env.example
+
+# Local IDE settings
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Local development artifacts
+*.tmp
+*.bak
