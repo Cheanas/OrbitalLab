@@ -1,0 +1,8 @@
+services:
+  orbitallab:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UV_VERSION: ${UV_VERSION:?UV_VERSION must be defined}
+    image: orbitallab:dev

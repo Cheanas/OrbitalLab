@@ -1,0 +1,65 @@
+[project]
+name = "orbitallab"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.5.4",
+]
+
+[build-system]
+requires = ["uv_build>=0.13.0,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "mypy>=2.4.0",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.17.0",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["src"]
+
+[tool.ruff.lint]
+select = [
+    "E4",   # Import-related errors
+    "E7",   # Statement-related errors
+    "E9",   # Syntax errors
+    "F",    # Pyflakes: unused imports, undefined names, etc.
+    "I",    # Import sorting (isort)
+    "UP",   # Modern Python syntax (pyupgrade)
+    "B",    # Common bugs (flake8-bugbear)
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unreachable = true
+show_error_codes = true
+mypy_path = "src"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--cov=orbitallab",
+    "--cov-report=term-missing",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["orbitallab"]
+
+[tool.coverage.report]
+show_missing = true
+precision = 2
