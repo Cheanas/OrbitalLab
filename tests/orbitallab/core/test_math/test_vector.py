@@ -1,6 +1,4 @@
-"""Testing add method against wrong typing"""
-
-from __future__ import annotations
+"""Testing vector.py file"""
 
 import pytest
 
@@ -91,29 +89,32 @@ def test_vector_mul_valid_type() -> None:
     assert value1 * value7 == result7
 
 
-def test_vector_rmull_valid_type() -> None:
-    value1 = Vector2D(2, 3)
-    value2 = 1
-    value3 = 2
-    value4 = -2
-    value5 = 0.5
-    value6 = -0.5
-    value7 = 0
-    value8 = True
+rmull_vectors =[
+    (Vector2D(2, 3), 1, Vector2D(2, 3)),
+    (Vector2D(2, 3), 2, Vector2D(4, 6)),
+    (Vector2D(2, 3),-2, Vector2D(-4, -6)),
+    (Vector2D(2, 3), 0.5, Vector2D(1, 1.5)),
+    (Vector2D(2, 3), -0.5, Vector2D(-1, -1.5)),
+    (Vector2D(2, 3), 0, Vector2D(0, 0)),   
+    (Vector2D(2, 3), True, Vector2D(0, 0))   
+]
+@pytest.mark.parametrize("input, multiplier, expected", rmull_vectors)
+def test_vector_rmul(input: Vector2D, multiplier: float, expected: Vector2D) -> None:
 
-    result2 = Vector2D(2, 3)
-    result3 = Vector2D(4, 6)
-    result4 = Vector2D(-4, -6)
-    result5 = Vector2D(1, 1.5)
-    result6 = Vector2D(-1, -1.5)
-    result7 = Vector2D(0, 0)
+    if isinstance(multiplier, bool):
+        with pytest.raises(TypeError):
+            multiplier * input  # pyright: ignore[reportUnusedExpression]
+    else:
+        assert multiplier * input == expected
 
-    assert value2 * value1 == result2
-    assert value3 * value1 == result3
-    assert value4 * value1 == result4
-    assert value5 * value1 == result5
-    assert value6 * value1 == result6
-    assert value7 * value1 == result7
+vectors = [
+    (Vector2D(3, 4), 5),
+    (Vector2D(-3, -4), 5),
+    (Vector2D(0, 0), 0),
+    (Vector2D(7, 0), 7),
+    (Vector2D(0, -9), 9),
+]
 
-    with pytest.raises(TypeError):
-        value8 * value1  # pyright: ignore[reportUnusedExpression]
+@pytest.mark.parametrize("vector, expected", vectors)
+def test_magnitude(vector: Vector2D, expected: float) -> None:
+    assert vector.magnitude() == pytest.approx(expected)

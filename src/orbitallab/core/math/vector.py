@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 from types import NotImplementedType
 
@@ -40,3 +41,6 @@ class Vector2D:
 
     def __rmul__(self, other: object) -> Vector2D | NotImplementedType:
         return self.__mul__(other)
+
+    def magnitude(self) -> float:
+        return math.hypot(self.x, self.y)
