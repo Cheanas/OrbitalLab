@@ -44,3 +44,13 @@ class Vector2D:
 
     def magnitude(self) -> float:
         return math.hypot(self.x, self.y)
+
+    def normalize(self) -> Vector2D:
+        #Avoid /0
+        if self.x == 0 and self.y ==0:
+            raise ValueError("cannot normalize a zero vector")
+        
+        magnitude = self.magnitude()
+        normalised_vector = Vector2D(self.x* (1/magnitude), self.y* (1/magnitude))
+        
+        return normalised_vector

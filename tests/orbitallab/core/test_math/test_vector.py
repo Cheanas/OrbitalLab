@@ -66,48 +66,36 @@ def test_vector_mul_invalid_type() -> None:
         value1 * value4  # pyright: ignore[reportUnusedExpression]
 
 
-def test_vector_mul_valid_type() -> None:
-    value1 = Vector2D(2, 3)
-    value2 = 1
-    value3 = 2
-    value4 = -2
-    value5 = 0.5
-    value6 = -0.5
-    value7 = 0
-    result2 = Vector2D(2, 3)
-    result3 = Vector2D(4, 6)
-    result4 = Vector2D(-4, -6)
-    result5 = Vector2D(1, 1.5)
-    result6 = Vector2D(-1, -1.5)
-    result7 = Vector2D(0, 0)
+mul_vectors =[
+    (Vector2D(2, 3), 1, Vector2D(2, 3)),
+    (Vector2D(2, 3), 2, Vector2D(4, 6)),
+    (Vector2D(2, 3),-2, Vector2D(-4, -6)),
+    (Vector2D(2, 3), 0.5, Vector2D(1, 1.5)),
+    (Vector2D(2, 3), -0.5, Vector2D(-1, -1.5)),
+    (Vector2D(2, 3), 0, Vector2D(0, 0)),      
+]
+@pytest.mark.parametrize("vector, multiplier, expected", mul_vectors)
+def test_vector_mul(vector: Vector2D, multiplier: float, expected: Vector2D) -> None:
 
-    assert value1 * value2 == result2
-    assert value1 * value3 == result3
-    assert value1 * value4 == result4
-    assert value1 * value5 == result5
-    assert value1 * value6 == result6
-    assert value1 * value7 == result7
+    if isinstance(multiplier, bool):
+        with pytest.raises(TypeError):
+            vector * multiplier  # pyright: ignore[reportUnusedExpression]
+    else:
+        assert vector * multiplier == expected
 
-
-rmull_vectors =[
+rmul_vectors =[
     (Vector2D(2, 3), 1, Vector2D(2, 3)),
     (Vector2D(2, 3), 2, Vector2D(4, 6)),
     (Vector2D(2, 3),-2, Vector2D(-4, -6)),
     (Vector2D(2, 3), 0.5, Vector2D(1, 1.5)),
     (Vector2D(2, 3), -0.5, Vector2D(-1, -1.5)),
     (Vector2D(2, 3), 0, Vector2D(0, 0)),   
-    (Vector2D(2, 3), True, Vector2D(0, 0))   
 ]
-@pytest.mark.parametrize("input, multiplier, expected", rmull_vectors)
-def test_vector_rmul(input: Vector2D, multiplier: float, expected: Vector2D) -> None:
+@pytest.mark.parametrize("vector, multiplier, expected", rmul_vectors)
+def test_vector_rmul(vector: Vector2D, multiplier: float, expected: Vector2D) -> None:
+    assert multiplier * vector == expected
 
-    if isinstance(multiplier, bool):
-        with pytest.raises(TypeError):
-            multiplier * input  # pyright: ignore[reportUnusedExpression]
-    else:
-        assert multiplier * input == expected
-
-vectors = [
+magnitude_vectors = [
     (Vector2D(3, 4), 5),
     (Vector2D(-3, -4), 5),
     (Vector2D(0, 0), 0),
@@ -115,6 +103,30 @@ vectors = [
     (Vector2D(0, -9), 9),
 ]
 
-@pytest.mark.parametrize("vector, expected", vectors)
+@pytest.mark.parametrize("vector, expected", magnitude_vectors)
 def test_magnitude(vector: Vector2D, expected: float) -> None:
     assert vector.magnitude() == pytest.approx(expected)
+
+normalize_vectors = [
+    (Vector2D(3,4), Vector2D(0.6, 0.8)),
+    (Vector2D(-3,-4), Vector2D(-0.6, -0.8)),
+    (Vector2D(5,0), Vector2D(1, 0)),
+    (Vector2D(0,-8), Vector2D(0, -1)),
+    (Vector2D(1,0), Vector2D(1, 0)),
+]
+@pytest.mark.parametrize("vector, expected", normalize_vectors)
+def test_normalize(vector: Vector2D, expected: Vector2D) -> None:
+    new_vec = Vector2D(vector.x, vector.y)
+    normalized_vector = vector.normalize()
+    assert new_vec == vector
+    assert vector is not normalized_vector
+    assert normalized_vector.x == pytest.approx(expected.x)
+    assert normalized_vector.y == pytest.approx(expected.y)
+
+    assert normalized_vector.magnitude() == pytest.approx(1)
+
+def test_normalize_invalide() -> None:
+    zero_vector = Vector2D(0, 0)
+
+    with pytest.raises(ValueError):
+        zero_vector.normalize()
